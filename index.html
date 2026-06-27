@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>展覽支線解謎驗證系統</title>
+    <title>展覽支線解謎驗證系統 v2</title>
     <style>
-        /* 基礎全域樣式：深色神祕展覽風格 */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -45,12 +44,11 @@
             margin-bottom: 24px;
         }
 
-        /* 工具類：隱藏元素 */
         .hidden {
             display: none !important;
         }
 
-        /* --- 主畫面：支線任務列表 --- */
+        /* --- 主畫面：6 關任務列表 --- */
         .quest-list {
             margin-bottom: 25px;
         }
@@ -58,8 +56,8 @@
             background: #2a2a35;
             border: 1px solid #3f3f46;
             border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -73,10 +71,10 @@
         }
         .quest-title {
             font-weight: bold;
-            font-size: 15px;
+            font-size: 14px;
         }
         .quest-status {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: bold;
             padding: 4px 8px;
             border-radius: 20px;
@@ -90,7 +88,7 @@
             color: #34d399;
         }
 
-        /* --- 主畫面：2x2 碎片拼圖區 --- */
+        /* --- 主畫面：3x2 碎片拼圖區 --- */
         .puzzle-section {
             border-top: 1px solid #3f3f46;
             padding-top: 20px;
@@ -103,10 +101,10 @@
         }
         .puzzle-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr); /* 改為 3 欄 */
             gap: 8px;
-            width: 180px;
-            height: 180px;
+            width: 240px;
+            height: 160px; /* 3x2 的比例 */
             margin: 0 auto 15px auto;
             border: 2px dashed #4b5563;
             padding: 6px;
@@ -119,9 +117,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 14px;
             transition: all 0.5s ease;
             color: #52525b;
+            font-weight: bold;
         }
         .puzzle-piece.unlocked {
             background: linear-gradient(135deg, #fbbf24, #d97706);
@@ -144,24 +143,44 @@
             font-size: 20px;
             margin-bottom: 8px;
         }
-        .reward-banner p {
-            font-size: 14px;
-            color: #d1fae5;
-        }
 
-        /* --- 子畫面：單一謎題輸入頁面 --- */
+        /* --- 子畫面：單一謎題與照片顯示頁面 --- */
         .quest-view h2 {
             color: #f59e0b;
             font-size: 18px;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
+        .quest-hint-text {
+            text-align: center;
+            font-size: 14px;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+        /* 圖片容器與樣式 */
+        .image-container {
+            width: 100%;
+            max-height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            border: 2px solid #3f3f46;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #141416;
+        }
+        .quest-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 讓圖片漂亮填滿 */
+        }
+        
         .input-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 16px;
-            margin: 20px 0;
             width: 100%;
         }
         input[type="text"] {
@@ -175,7 +194,6 @@
             font-size: 18px;
             text-align: center;
             letter-spacing: 2px;
-            transition: border-color 0.2s;
         }
         input[type="text"]:focus {
             border-color: #f59e0b;
@@ -192,51 +210,16 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
         }
         button:hover {
             background: #d97706;
         }
-        
-        /* 提示按鈕樣式（灰底橘字，帶有低調的神祕感） */
-        .btn-hint {
-            background: #27272a;
-            color: #fbbf24;
-            border: 1px solid #4b5563;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: normal;
-            margin-top: 5px;
-        }
-        .btn-hint:hover {
-            background: #3f3f46;
-        }
-        
-        /* 提示內容方塊 */
-        .hint-box {
-            width: 100%;
-            max-width: 280px;
-            background: #1c1917;
-            border: 1px dashed #78350f;
-            color: #fcd34d;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            line-height: 1.5;
-            text-align: center;
-            animation: success-pop 0.3s ease-out;
-        }
-
         .btn-back {
             background: #4b5563;
             color: #fff;
-            margin-top: 15px;
-        }
-        .btn-back:hover {
-            background: #374151;
+            margin-top: 5px;
         }
 
-        /* 驗證回饋訊息樣式 */
         .msg {
             width: 100%;
             max-width: 280px;
@@ -259,21 +242,14 @@
             text-align: left;
             max-width: 100%;
             padding: 18px;
-            animation: success-pop 0.4s ease-out;
         }
 
-        /* --- 動畫效果 --- */
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.02); box-shadow: 0 0 15px rgba(52,211,153,0.4); }
+            50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
-        @keyframes success-pop {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
 
-        /* 底部重設按鈕 */
         .reset-box {
             text-align: center;
             margin-top: 10px;
@@ -293,53 +269,65 @@
     <div class="container">
         <div id="main-menu">
             <h1>【探索展區】支線任務終端機</h1>
-            <p class="subtitle">請收集所有關卡碎片以解鎖終極獎品</p>
+            <p class="subtitle">根據照片提示尋找展場線索，收集 6 個碎片</p>
             
             <div class="quest-list">
                 <div class="quest-card" onclick="openQuest('q1')">
-                    <span class="quest-title">支線 A：神秘的保險箱</span>
+                    <span class="quest-title">任務 01：神秘的保險箱</span>
                     <span id="badge-q1" class="quest-status status-locked">🔒 未解鎖</span>
                 </div>
                 <div class="quest-card" onclick="openQuest('q2')">
-                    <span class="quest-title">支線 B：古老的時鐘</span>
+                    <span class="quest-title">任務 02：古老的時鐘</span>
                     <span id="badge-q2" class="quest-status status-locked">🔒 未解鎖</span>
                 </div>
                 <div class="quest-card" onclick="openQuest('q3')">
-                    <span class="quest-title">支線 C：隱藏的壁畫</span>
+                    <span class="quest-title">任務 03：隱藏的壁畫</span>
                     <span id="badge-q3" class="quest-status status-locked">🔒 未解鎖</span>
                 </div>
                 <div class="quest-card" onclick="openQuest('q4')">
-                    <span class="quest-title">支線 D：抽屜的夾層</span>
+                    <span class="quest-title">任務 04：抽屜的夾層</span>
                     <span id="badge-q4" class="quest-status status-locked">🔒 未解鎖</span>
+                </div>
+                <div class="quest-card" onclick="openQuest('q5')">
+                    <span class="quest-title">任務 05：神祕的盆栽</span>
+                    <span id="badge-q5" class="quest-status status-locked">🔒 未解鎖</span>
+                </div>
+                <div class="quest-card" onclick="openQuest('q6')">
+                    <span class="quest-title">任務 06：接待台的角落</span>
+                    <span id="badge-q6" class="quest-status status-locked">🔒 未解鎖</span>
                 </div>
             </div>
 
             <div class="puzzle-section">
                 <h3>🧩 目前收集的圖騰碎片</h3>
                 <div class="puzzle-grid">
-                    <div id="piece-q1" class="puzzle-piece">◤</div>
-                    <div id="piece-q2" class="puzzle-piece">◥</div>
-                    <div id="piece-q3" class="puzzle-piece">◣</div>
-                    <div id="piece-q4" class="puzzle-piece">◢</div>
+                    <div id="piece-q1" class="puzzle-piece">碎片 1</div>
+                    <div id="piece-q2" class="puzzle-piece">碎片 2</div>
+                    <div id="piece-q3" class="puzzle-piece">碎片 3</div>
+                    <div id="piece-q4" class="puzzle-piece">碎片 4</div>
+                    <div id="piece-q5" class="puzzle-piece">碎片 5</div>
+                    <div id="piece-q6" class="puzzle-piece">碎片 6</div>
                 </div>
             </div>
 
             <div id="reward-zone" class="reward-banner hidden">
-                <h2>🎉 恭喜拼湊出完整圖騰！</h2>
+                <h2>🎉 成功集滿 6 張碎片！</h2>
                 <p>請向展覽現場工作人員出示此畫面<br>即可領取「精美主題小禮物」乙份！</p>
             </div>
         </div>
 
         <div id="quest-view" class="quest-view hidden">
             <h2 id="current-quest-title">支線任務</h2>
+            <p class="quest-hint-text">🔍 提示：請在展場中尋找照片所示的地點或道具</p>
+            
+            <div class="image-container">
+                <img id="current-quest-img" class="quest-image" src="" alt="任務提示照片">
+            </div>
             
             <div class="input-container">
-                <div id="input-area" class="input-container" style="margin:0; width:100%;">
+                <div id="input-area" class="input-container">
                     <input type="text" id="password-input" placeholder="請輸入四位數密碼" autocomplete="off">
                     <button onclick="verifyPassword()">提交驗證</button>
-                    
-                    <button id="hint-button" class="btn-hint" onclick="toggleHint()">💡 觀看過關提示</button>
-                    <div id="hint-box" class="hint-box hidden"></div>
                 </div>
 
                 <div id="feedback-msg" class="msg hidden"></div>
@@ -354,42 +342,52 @@
     </div>
 
     <script>
-        // 1. 定義所有關卡的資料（包含新增的 hint 欄位）
+        // 🛠 在這裡修改：6個關卡的名稱、密碼、解鎖後的文字，以及【照片網址】
         const questData = {
             q1: {
-                title: "支線 A：神秘的保險箱",
+                title: "任務 01：神秘的保險箱",
                 answer: "1984",
-                story: "💚 恭喜過關！你在保險箱底層發現了一張沾有血跡的船票...（請前往 A3 展區）",
-                hint: "🔍 提示：保險箱旁的舊報紙上，有一行被紅筆圈起來的年份數字。" // 在這裡修改提示
+                imgUrl: "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=500", // 請換成你們的保險箱照片網址
+                story: "💚 恭喜過關！你在保險箱底層發現了一張沾有血跡的船票...（請前往 A3 展區）"
             },
             q2: {
-                title: "支線 B：古老的時鐘",
-                answer: "1234", 
-                story: "💚 恭喜過關！時鐘內部傳來齒輪咬合聲，隨後掉出了一把發黑的銅鑰匙...（請前往 B1 展區）",
-                hint: "🔍 提示：注意時鐘分針停下來的四個數字順序。"
+                title: "任務 02：古老的時鐘",
+                answer: "1234",
+                imgUrl: "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=500", // 請換成你們的時鐘照片網址
+                story: "💚 恭喜過關！時鐘內部傳來齒輪聲，隨後掉出了一把銅鑰匙...（請前往 B1 展區）"
             },
             q3: {
-                title: "支線 C：隱藏的壁畫",
+                title: "任務 03：隱藏的壁畫",
                 answer: "5791", 
-                story: "💚 恭喜過關！壁畫後方竟然隱藏著一個暗格，裡面藏著一本日記本...（請前往 C2 展區）",
-                hint: "🔍 提示：數數看壁畫中幾隻火鶴、幾朵玫瑰、幾顆星星與幾面鏡子。"
+                imgUrl: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500", // 請換成你們的壁畫照片網址
+                story: "💚 恭喜過關！壁畫後方竟然隱藏著一個暗格，裡面藏著日記本...（請前往 C2 展區）"
             },
             q4: {
-                title: "支線 D：抽屜的夾層",
+                title: "任務 04：抽屜的夾層",
                 answer: "8888", 
-                story: "💚 恭喜過關！你在夾層中發現了一枚古老的刻印徽章，刻著奇異的符號...（請前往 D4 展區）",
-                hint: "🔍 提示：夾層底部刻著英文字母『B-B-B-B』，請對照展版上的字母密碼表。"
+                imgUrl: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500", // 請換成你們的抽屜照片網址
+                story: "💚 恭喜過關！你在夾層中發現了一枚古老的刻印徽章...（請前往 D4 展區）"
+            },
+            q5: {
+                title: "任務 05：神祕的盆栽",
+                answer: "9999", 
+                imgUrl: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=500", // 請換成你們的盆栽照片網址
+                story: "💚 恭喜過關！你在花盆泥土邊緣摸到了一個用防水袋包裝的紙條...（請前往 E1 展區）"
+            },
+            q6: {
+                title: "任務 06：接待台的角落",
+                answer: "0000", 
+                imgUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=500", // 請換成你們的接待台照片網址
+                story: "💚 恭喜過關！接待台看板後面貼著最後一張字條，寫著真相...（請前往大廳服務台）"
             }
         };
 
-        // 2. 追蹤玩家進度
-        let playerProgress = JSON.parse(localStorage.getItem('exhibit_game_progress')) || {
-            q1: false, q2: false, q3: false, q4: false
+        let playerProgress = JSON.parse(localStorage.getItem('exhibit_game_progress_v2')) || {
+            q1: false, q2: false, q3: false, q4: false, q5: false, q6: false
         };
 
-        let currentActiveQuest = ''; 
+        let currentActiveQuest = '';
 
-        // 3. 初始化主畫面
         function initGame() {
             let totalSolved = 0;
 
@@ -410,30 +408,27 @@
             }
 
             const rewardZone = document.getElementById('reward-zone');
-            if (totalSolved === 4) {
+            if (totalSolved === 6) {
                 rewardZone.classList.remove('hidden');
             } else {
                 rewardZone.classList.add('hidden');
             }
         }
 
-        // 4. 開啟特定謎題頁面
         function openQuest(questId) {
             currentActiveQuest = questId;
             const data = questData[questId];
             
             document.getElementById('main-menu').classList.add('hidden');
             document.getElementById('quest-view').classList.remove('hidden');
+            
             document.getElementById('current-quest-title').innerText = data.title;
+            // 換上該關卡對應的照片網址
+            document.getElementById('current-quest-img').src = data.imgUrl;
+            
             document.getElementById('password-input').value = '';
-            
-            // 預設將提示框隱藏
-            document.getElementById('hint-box').classList.add('hidden');
-            document.getElementById('hint-button').classList.remove('hidden');
-            
             const feedback = document.getElementById('feedback-msg');
             feedback.className = "msg hidden";
-            feedback.innerText = '';
 
             const inputArea = document.getElementById('input-area');
             if (playerProgress[questId]) {
@@ -445,21 +440,6 @@
             }
         }
 
-        // [新增功能] 切換顯示提示內容
-        function toggleHint() {
-            const hintBox = document.getElementById('hint-box');
-            const currentQuest = questData[currentActiveQuest];
-            
-            // 如果提示框原本是隱藏的，就填入文字並秀出來
-            if (hintBox.classList.contains('hidden')) {
-                hintBox.innerText = currentQuest.hint;
-                hintBox.classList.remove('hidden');
-            } else {
-                hintBox.classList.add('hidden');
-            }
-        }
-
-        // 5. 驗證密碼
         function verifyPassword() {
             const inputVal = document.getElementById('password-input').value.trim();
             const currentQuest = questData[currentActiveQuest];
@@ -469,9 +449,8 @@
             feedback.classList.remove('hidden');
 
             if (inputVal === currentQuest.answer) {
-                playerProgress[currentActiveQuest] = true; 
-                localStorage.setItem('exhibit_game_progress', JSON.stringify(playerProgress)); 
-
+                playerProgress[currentActiveQuest] = true;
+                localStorage.setItem('exhibit_game_progress_v2', JSON.stringify(playerProgress));
                 inputArea.classList.add('hidden');
                 feedback.innerText = currentQuest.story;
                 feedback.className = "msg msg-success";
@@ -481,18 +460,16 @@
             }
         }
 
-        // 6. 返回主選單
         function goBack() {
             document.getElementById('quest-view').classList.add('hidden');
             document.getElementById('main-menu').classList.remove('hidden');
-            initGame(); 
+            initGame();
         }
 
-        // 7. 重設遊戲
         function resetGame() {
-            if(confirm("確定要清除所有通關進度嗎？(測試用)")) {
-                playerProgress = { q1: false, q2: false, q3: false, q4: false };
-                localStorage.setItem('exhibit_game_progress', JSON.stringify(playerProgress));
+            if(confirm("確定要清除所有通關進度嗎？")) {
+                playerProgress = { q1: false, q2: false, q3: false, q4: false, q5: false, q6: false };
+                localStorage.setItem('exhibit_game_progress_v2', JSON.stringify(playerProgress));
                 initGame();
                 alert("進度已重設！");
             }
