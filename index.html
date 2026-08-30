@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>展覽支線解謎驗證系統 v2</title>
+    <title>支線謎題：解鎖K的秘密</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang TC", "Microsoft JhengHei", sans-serif;
         }
         body {
             background-color: #121214;
             color: #e2e8f0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,10 +22,10 @@
         }
         .container {
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             background: #1e1e24;
             border-radius: 16px;
-            padding: 24px;
+            padding: 22px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.7);
             border: 1px solid #2d2d35;
             margin-bottom: 20px;
@@ -33,25 +33,64 @@
         h1 {
             text-align: center;
             color: #f59e0b;
-            font-size: 22px;
+            font-size: 20px;
             margin-bottom: 8px;
-            letter-spacing: 1px;
+            line-height: 1.4;
         }
         .subtitle {
             text-align: center;
             color: #94a3b8;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        .hidden { display: none !important; }
+
+        /* 主畫面：拼圖預覽 (2x3) */
+        .puzzle-section {
+            background: #141416;
+            border: 1px solid #3f3f46;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .puzzle-title {
             font-size: 14px;
-            margin-bottom: 24px;
+            color: #f59e0b;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            width: 240px;
+            height: 160px;
+            margin: 0 auto;
+            border: 2px dashed #4b5563;
+            padding: 4px;
+            border-radius: 8px;
+            background: #09090b;
+        }
+        .puzzle-piece {
+            background: #27272a;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #52525b;
+            font-weight: bold;
+            transition: all 0.4s ease;
+        }
+        .puzzle-piece.unlocked {
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            color: #121214;
+            box-shadow: inset 0 0 8px rgba(255,255,255,0.6);
         }
 
-        .hidden {
-            display: none !important;
-        }
-
-        /* --- 主畫面：6 關任務列表 --- */
-        .quest-list {
-            margin-bottom: 25px;
-        }
+        /* 任務卡片 */
         .quest-card {
             background: #2a2a35;
             border: 1px solid #3f3f46;
@@ -67,415 +106,575 @@
         .quest-card:hover {
             border-color: #f59e0b;
             background: #323242;
-            transform: translateY(-2px);
         }
-        .quest-title {
-            font-weight: bold;
-            font-size: 14px;
-        }
+        .quest-title { font-weight: bold; font-size: 14px; }
         .quest-status {
             font-size: 12px;
             font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 20px;
-        }
-        .status-locked {
-            background: #3f3f46;
-            color: #cbd5e1;
-        }
-        .status-unlocked {
-            background: #064e3b;
-            color: #34d399;
-        }
-
-        /* --- 主畫面：3x2 碎片拼圖區 --- */
-        .puzzle-section {
-            border-top: 1px solid #3f3f46;
-            padding-top: 20px;
-            text-align: center;
-        }
-        .puzzle-section h3 {
-            color: #f59e0b;
-            font-size: 16px;
-            margin-bottom: 12px;
-        }
-        .puzzle-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 改為 3 欄 */
-            gap: 8px;
-            width: 240px;
-            height: 160px; /* 3x2 的比例 */
-            margin: 0 auto 15px auto;
-            border: 2px dashed #4b5563;
-            padding: 6px;
-            background: #141416;
-            border-radius: 8px;
-        }
-        .puzzle-piece {
-            background: #27272a;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            transition: all 0.5s ease;
-            color: #52525b;
-            font-weight: bold;
-        }
-        .puzzle-piece.unlocked {
-            background: linear-gradient(135deg, #fbbf24, #d97706);
-            color: #fff;
-            box-shadow: inset 0 0 8px rgba(255,255,255,0.6);
-        }
-
-        /* --- 主畫面：終極獎勵兌換券 --- */
-        .reward-banner {
-            background: linear-gradient(135deg, #059669, #047857);
-            border: 2px solid #34d399;
+            padding: 3px 8px;
             border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            margin-top: 20px;
-            animation: pulse 2s infinite;
         }
-        .reward-banner h2 {
-            color: #fff;
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
+        .status-locked { background: #3f3f46; color: #cbd5e1; }
+        .status-unlocked { background: #064e3b; color: #34d399; }
 
-        /* --- 子畫面：單一謎題與照片顯示頁面 --- */
-        .quest-view h2 {
-            color: #f59e0b;
-            font-size: 18px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        .quest-hint-text {
-            text-align: center;
-            font-size: 14px;
-            color: #cbd5e1;
-            margin-bottom: 15px;
-        }
-        /* 圖片容器與樣式 */
-        .image-container {
+        /* 按鈕通用樣式 (黃底) */
+        .btn-yellow {
             width: 100%;
-            max-height: 250px;
-            overflow: hidden;
-            border-radius: 8px;
-            border: 2px solid #3f3f46;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: #141416;
-        }
-        .quest-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover; /* 讓圖片漂亮填滿 */
-        }
-        
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 16px;
-            width: 100%;
-        }
-        input[type="text"] {
-            width: 100%;
-            max-width: 280px;
-            background: #0f0f11;
-            border: 2px solid #4b5563;
-            border-radius: 8px;
-            padding: 14px;
-            color: #fff;
-            font-size: 18px;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-        input[type="text"]:focus {
-            border-color: #f59e0b;
-            outline: none;
-        }
-        button {
-            width: 100%;
-            max-width: 280px;
             background: #f59e0b;
             color: #121214;
             border: none;
             border-radius: 8px;
-            padding: 14px;
-            font-size: 16px;
+            padding: 12px;
+            font-size: 15px;
             font-weight: bold;
             cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
         }
-        button:hover {
-            background: #d97706;
-        }
-        .btn-back {
+        .btn-yellow:hover { background: #d97706; }
+        .btn-gray {
+            width: 100%;
             background: #4b5563;
             color: #fff;
-            margin-top: 5px;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        .btn-gray:hover { background: #374151; }
+
+        /* 劇情與提示區塊 */
+        .pre-story-box {
+            background: #18181b;
+            color: #a1a1aa; /* 灰色前半段劇情 */
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 14px;
+            border-radius: 8px;
+            border-left: 3px solid #71717a;
+            margin-bottom: 16px;
+        }
+        .full-story-box {
+            background: #18181b;
+            padding: 16px;
+            border-radius: 8px;
+            line-height: 1.7;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+        .dialogue-k { color: #60a5fa; font-weight: 500; margin-top: 8px; } /* K的對話：亮藍 */
+        .dialogue-r { color: #f87171; font-weight: 500; margin-top: 8px; } /* R的對話：淡紅 */
+        
+        .question-box {
+            background: #27272a;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .quest-image {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: 6px;
+            margin: 10px 0;
+            background: #000;
         }
 
-        .msg {
+        /* 輸入框與錯誤訊息 */
+        input[type="text"] {
             width: 100%;
-            max-width: 280px;
-            text-align: center;
-            font-weight: bold;
-            padding: 12px;
+            background: #09090b;
+            border: 2px solid #4b5563;
             border-radius: 8px;
-            font-size: 14px;
+            padding: 12px;
+            color: #fff;
+            font-size: 16px;
+            text-align: center;
+            margin: 10px 0;
         }
+        input[type="text"]:focus { border-color: #f59e0b; outline: none; }
         .msg-error {
             background: #7f1d1d;
             color: #fca5a5;
-            border: 1px solid #991b1b;
-        }
-        .msg-success {
-            background: #064e3b;
-            color: #a7f3d0;
-            border: 1px solid #065f46;
-            line-height: 1.6;
-            text-align: left;
-            max-width: 100%;
-            padding: 18px;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-            100% { transform: scale(1); }
-        }
-
-        .reset-box {
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 8px;
+        }
+
+        /* 碎片4 ABCD 選擇題按鈕網格 */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .btn-option {
+            background: #2a2a35;
+            border: 2px solid #3f3f46;
+            color: #f59e0b;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        .btn-option:hover { background: #3f3f46; border-color: #f59e0b; }
+
+        /* 彈窗 Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.75);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 20px;
+        }
+        .modal-content {
+            background: #1e1e24;
+            border: 2px solid #34d399;
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 360px;
+            width: 100%;
+            text-align: center;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: #38bdf8;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+            margin: 6px 0;
+            display: block;
         }
         .btn-reset {
             background: transparent;
-            color: #4b5563;
+            color: #52525b;
             font-size: 11px;
             border: none;
             cursor: pointer;
             text-decoration: underline;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div id="main-menu">
-            <h1>【探索展區】支線任務終端機</h1>
-            <p class="subtitle">根據照片提示尋找展場線索，收集 6 個碎片</p>
-            
-            <div class="quest-list">
-                <div class="quest-card" onclick="openQuest('q1')">
-                    <span class="quest-title">任務 01：神秘的保險箱</span>
-                    <span id="badge-q1" class="quest-status status-locked">🔒 未解鎖</span>
-                </div>
-                <div class="quest-card" onclick="openQuest('q2')">
-                    <span class="quest-title">任務 02：古老的時鐘</span>
-                    <span id="badge-q2" class="quest-status status-locked">🔒 未解鎖</span>
-                </div>
-                <div class="quest-card" onclick="openQuest('q3')">
-                    <span class="quest-title">任務 03：隱藏的壁畫</span>
-                    <span id="badge-q3" class="quest-status status-locked">🔒 未解鎖</span>
-                </div>
-                <div class="quest-card" onclick="openQuest('q4')">
-                    <span class="quest-title">任務 04：抽屜的夾層</span>
-                    <span id="badge-q4" class="quest-status status-locked">🔒 未解鎖</span>
-                </div>
-                <div class="quest-card" onclick="openQuest('q5')">
-                    <span class="quest-title">任務 05：神祕的盆栽</span>
-                    <span id="badge-q5" class="quest-status status-locked">🔒 未解鎖</span>
-                </div>
-                <div class="quest-card" onclick="openQuest('q6')">
-                    <span class="quest-title">任務 06：接待台的角落</span>
-                    <span id="badge-q6" class="quest-status status-locked">🔒 未解鎖</span>
-                </div>
-            </div>
+<div class="container">
+    <!-- ================= 1. 首頁 ================= -->
+    <div id="view-home">
+        <h1>歡迎挑戰支線謎題，解鎖K的秘密！</h1>
+        <p class="subtitle">
+            集齊六個碎片即可到服務台兌換獎勵（沒解完也可以）<br>
+            題目或解題關鍵都藏在展場中，可以配合手機上的線索行動～
+        </p>
 
-            <div class="puzzle-section">
-                <h3>🧩 目前收集的圖騰碎片</h3>
-                <div class="puzzle-grid">
-                    <div id="piece-q1" class="puzzle-piece">碎片 1</div>
-                    <div id="piece-q2" class="puzzle-piece">碎片 2</div>
-                    <div id="piece-q3" class="puzzle-piece">碎片 3</div>
-                    <div id="piece-q4" class="puzzle-piece">碎片 4</div>
-                    <div id="piece-q5" class="puzzle-piece">碎片 5</div>
-                    <div id="piece-q6" class="puzzle-piece">碎片 6</div>
-                </div>
+        <!-- 拼圖區 -->
+        <div class="puzzle-section">
+            <div class="puzzle-title">🧩 K的記憶拼圖進度</div>
+            <div class="puzzle-grid">
+                <div id="pz-q1" class="puzzle-piece">碎片 1</div>
+                <div id="pz-q2" class="puzzle-piece">碎片 2</div>
+                <div id="pz-q3" class="puzzle-piece">碎片 3</div>
+                <div id="pz-q4" class="puzzle-piece">碎片 4</div>
+                <div id="pz-q5" class="puzzle-piece">碎片 5</div>
+                <div id="pz-q6" class="puzzle-piece">碎片 6</div>
             </div>
-
-            <div id="reward-zone" class="reward-banner hidden">
-                <h2>🎉 成功集滿 6 張碎片！</h2>
-                <p>請向展覽現場工作人員出示此畫面<br>即可領取「精美主題小禮物」乙份！</p>
+            <div id="full-puzzle-btn-box" class="hidden" style="margin-top: 12px;">
+                <a href="https://drive.google.com/file/d/1GiNWPPcoDFQRpSDvCg87sFAw2b1h1wv/view?usp=drive_link" target="_blank" style="color: #34d399; font-size: 13px; font-weight: bold; text-decoration: underline;">
+                    🎉 查看完整拼圖大圖
+                </a>
             </div>
         </div>
 
-        <div id="quest-view" class="quest-view hidden">
-            <h2 id="current-quest-title">支線任務</h2>
-            <p class="quest-hint-text">🔍 提示：請在展場中尋找照片所示的地點或道具</p>
-            
-            <div class="image-container">
-                <img id="current-quest-img" class="quest-image" src="" alt="任務提示照片">
+        <!-- 任務列表 -->
+        <div class="quest-list">
+            <div class="quest-card" onclick="openQuestIntro('q1')">
+                <span class="quest-title">碎片1. 嚴肅打委託信的K</span>
+                <span id="badge-q1" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
-            
-            <div class="input-container">
-                <div id="input-area" class="input-container">
-                    <input type="text" id="password-input" placeholder="請輸入四位數密碼" autocomplete="off">
-                    <button onclick="verifyPassword()">提交驗證</button>
-                </div>
-
-                <div id="feedback-msg" class="msg hidden"></div>
-
-                <button class="btn-back" onclick="goBack()">返回主選單</button>
+            <div class="quest-card" onclick="openQuestIntro('q2')">
+                <span class="quest-title">碎片2. 為什麼K每次都能精準地回覆</span>
+                <span id="badge-q2" class="quest-status status-locked">🔒 未解鎖</span>
+            </div>
+            <div class="quest-card" onclick="openQuestIntro('q3')">
+                <span class="quest-title">碎片3. 關於K的名字由來</span>
+                <span id="badge-q3" class="quest-status status-locked">🔒 未解鎖</span>
+            </div>
+            <div class="quest-card" onclick="openQuestIntro('q4')">
+                <span class="quest-title">碎片4. 菜鳥整域師K?</span>
+                <span id="badge-q4" class="quest-status status-locked">🔒 未解鎖</span>
+            </div>
+            <div class="quest-card" onclick="openQuestIntro('q5')">
+                <span class="quest-title">碎片5. R和K</span>
+                <span id="badge-q5" class="quest-status status-locked">🔒 未解鎖</span>
+            </div>
+            <div class="quest-card" onclick="openQuestIntro('q6')">
+                <span class="quest-title">碎片6. 你與K的初見</span>
+                <span id="badge-q6" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
         </div>
     </div>
 
-    <div class="reset-box">
-        <button class="btn-reset" onclick="resetGame()">重設所有進度 (測試用)</button>
+    <!-- ================= 2. 任務前情介紹頁 ================= -->
+    <div id="view-intro" class="hidden">
+        <h1 id="intro-title" style="margin-bottom: 16px;">任務標題</h1>
+        <div class="pre-story-box" id="intro-pre-story"></div>
+        <button class="btn-yellow" onclick="goToSolving()">開始解謎</button>
+        <button class="btn-gray" onclick="goToHome()">回上一頁</button>
     </div>
 
-    <script>
-        // 🛠 在這裡修改：6個關卡的名稱、密碼、解鎖後的文字，以及【照片網址】
-        const questData = {
-            q1: {
-                title: "任務 01：",
-                answer: "1984",
-                imgUrl: "https://images.unsplash.com/photo-1582139329536-e7284fece509?w=500", // 請換成你們的保險箱照片網址
-                story: "💚 恭喜過關！很嚴肅的在打委託信，其實是因為K是電腦白痴 "
-            },
-            q2: {
-                title: "任務 02：",
-                answer: "1234",
-                imgUrl: "https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?w=500", // 請換成你們的時鐘照片網址
-                story: "💚 恭喜過關！為什麼每次都能精準地回覆 "
-            },
-            q3: {
-                title: "任務 03：",
-                answer: "5791", 
-                imgUrl: "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=500", // 請換成你們的壁畫照片網址
-                story: "💚 恭喜過關！關於整域師事務所 "
-            },
-            q4: {
-                title: "任務 04：",
-                answer: "8888", 
-                imgUrl: "https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=500", // 請換成你們的抽屜照片網址
-                story: "💚 恭喜過關！菜鳥整域師K "
-            },
-            q5: {
-                title: "任務 05： ",
-                answer: "9999", 
-                imgUrl: "https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=500", // 請換成你們的盆栽照片網址
-                story: "💚 恭喜過關！R和K的小故事 "
-            },
-            q6: {
-                title: "任務 06： ",
-                answer: "0000", 
-                imgUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=500", // 請換成你們的接待台照片網址
-                story: "💚 恭喜過關！你覺得K是怎麼樣的人 "
-            }
-        };
+    <!-- ================= 3. 解謎作答頁 ================= -->
+    <div id="view-solving" class="hidden">
+        <h1 id="solving-title" style="margin-bottom: 16px;">任務題目</h1>
+        
+        <!-- 灰色前半段劇情 (讓玩家在解題時還能看到) -->
+        <div class="pre-story-box" id="solving-pre-story"></div>
 
-        let playerProgress = JSON.parse(localStorage.getItem('exhibit_game_progress_v2')) || {
-            q1: false, q2: false, q3: false, q4: false, q5: false, q6: false
-        };
+        <!-- 題目內容區 -->
+        <div class="question-box">
+            <div id="solving-q-text" style="font-weight: bold; margin-bottom: 10px;"></div>
+            <img id="solving-q-img" class="quest-image hidden" src="" alt="題目圖片">
+            <div id="solving-q-subtext" style="font-size: 13px; color: #94a3b8;"></div>
 
-        let currentActiveQuest = '';
+            <!-- 碎片1 專用提示折疊 -->
+            <div id="q1-hints-box" class="hidden" style="margin-top: 10px;">
+                <button class="toggle-btn" onclick="toggleHint('hint1')">💡 我需要提示</button>
+                <div id="hint1-content" class="hidden" style="font-size: 13px; color: #f59e0b; margin: 4px 0 10px 0;">
+                    看起來像是有人用鍵盤打中文卻忘記切換成注音輸入法了
+                </div>
+                <button class="toggle-btn" onclick="toggleHint('hint2')">💡 我沒學過注音</button>
+                <div id="hint2-content" class="hidden" style="margin-top: 6px;">
+                    <div style="font-size: 13px; color: #f59e0b; margin-bottom: 4px;">附上注音與拼音的對照表，還是可以解開的喔！</div>
+                    <img src="https://lh3.googleusercontent.com/d/1gGHZDRJSGjVbQgr-WjPKEEA0xolMjF6a" class="quest-image" alt="注音拼音對照表">
+                </div>
+            </div>
+        </div>
 
-        function initGame() {
-            let totalSolved = 0;
+        <!-- 作答區：一般文字輸入 -->
+        <div id="action-text-input">
+            <input type="text" id="ans-input" placeholder="請在此輸入答案..." autocomplete="off">
+            <button class="btn-yellow" onclick="submitAnswer()">提交驗證</button>
+        </div>
 
-            for (let key in playerProgress) {
-                const badge = document.getElementById(`badge-${key}`);
-                const piece = document.getElementById(`piece-${key}`);
-                
-                if (playerProgress[key]) {
-                    badge.innerText = "✨ 已解鎖";
-                    badge.className = "quest-status status-unlocked";
-                    piece.classList.add('unlocked');
-                    totalSolved++;
-                } else {
-                    badge.innerText = "🔒 未解鎖";
-                    badge.className = "quest-status status-locked";
-                    piece.classList.remove('unlocked');
-                }
-            }
+        <!-- 作答區：碎片4 專用 ABCD 選項 -->
+        <div id="action-options" class="hidden">
+            <div style="font-size: 13px; text-align: center; color: #f59e0b; margin-bottom: 8px;">請選擇正確的圖片選項：</div>
+            <div class="options-grid">
+                <button class="btn-option" onclick="submitChoice('A')">選項 (A)</button>
+                <button class="btn-option" onclick="submitChoice('B')">選項 (B)</button>
+                <button class="btn-option" onclick="submitChoice('C')">選項 (C)</button>
+                <button class="btn-option" onclick="submitChoice('D')">選項 (D)</button>
+            </div>
+        </div>
 
-            const rewardZone = document.getElementById('reward-zone');
-            if (totalSolved === 6) {
-                rewardZone.classList.remove('hidden');
+        <div id="error-msg" class="msg-error hidden">❌ 答案不正確，請再檢查一下線索！</div>
+        <button class="btn-gray" onclick="goToHome()">回首頁</button>
+    </div>
+
+    <!-- ================= 4. 答對後的故事後續頁 ================= -->
+    <div id="view-story" class="hidden">
+        <h1 id="story-title" style="margin-bottom: 16px;">故事後續</h1>
+        <div class="full-story-box">
+            <!-- 灰色前半段 -->
+            <div id="story-pre-part" style="color: #71717a; margin-bottom: 12px;"></div>
+            <hr style="border: none; border-top: 1px dashed #3f3f46; margin: 12px 0;">
+            <!-- 彩色對話後半段 -->
+            <div id="story-post-part"></div>
+        </div>
+        <button class="btn-yellow" onclick="goToHome()">回首頁</button>
+    </div>
+</div>
+
+<!-- 答對彈窗 Modal -->
+<div id="success-modal" class="modal-overlay hidden">
+    <div class="modal-content">
+        <div style="font-size: 40px; margin-bottom: 10px;">🎉</div>
+        <h2 style="color: #34d399; font-size: 20px; margin-bottom: 12px;">答對了！</h2>
+        <p style="font-size: 14px; color: #cbd5e1; margin-bottom: 18px;">成功解鎖了一塊記憶拼圖！</p>
+        <button class="btn-yellow" onclick="openStoryAfterModal()">查看故事後續</button>
+    </div>
+</div>
+
+<!-- 測試重設按鈕 -->
+<div style="text-align: center;">
+    <button class="btn-reset" onclick="resetProgress()">重設所有解題進度 (測試用)</button>
+</div>
+
+<!-- ================= 系統邏輯 ================= -->
+<script>
+    // 關卡題目、答案、圖片與劇情資料庫
+    const questDb = {
+        q1: {
+            title: "碎片1. 嚴肅打委託信的K",
+            preStory: "有傳聞說，K每次在打委託信的時候都會看起來非常的嚴肅，一副苦大仇深的表情，整個辦公室的氣氛都會異常肅殺，將茶遞給他的時候都必須非常小心的清拿輕放，不然下一秒他的眼刀感覺就要掃過來了。",
+            qText: "cl3wl3u04vu/fu6u, cl3vu;3e03dj94vu8410。",
+            qSub: "請輸入完整文字（包含標點符號）",
+            img: "",
+            type: "text",
+            answers: ["好討厭星期一,好想趕快下班。", "好討厭星期一，好想趕快下班。", "好討厭星期一,好想趕快下班", "好討厭星期一，好想趕快下班"],
+            dialogues: [
+                { speaker: "K", text: "唉呀，是這樣嗎？" },
+                { speaker: "K", text: "關於這個嘛....其實只是我個人還用不太習慣電腦呢，原本都是用手寫的，但之前被人說我用手寫的有時候他們都看不懂，又說現在都電子化了誰還用手寫" },
+                { speaker: "K", text: "嗯？你剛說什麼？我只是還不太習慣才用兩隻手指打字的，才不是什麼電腦白癡好嗎（微笑）" }
+            ]
+        },
+        q2: {
+            title: "碎片2. 為什麼K每次都能精準地回覆",
+            preStory: "K每次總是能在緊要關頭傳訊息提醒重要的事，連整域師在被房間主人的鎖困住時也能夠精準的給出提示，彷彿一直跟著我們一樣，雖然是很令人安心的存在，有時候也很好奇K究竟為什麼這麼的全知全能？",
+            qText: "請輸入一個英文單字 (6個字母)",
+            qSub: "",
+            img: "https://lh3.googleusercontent.com/d/1HA3NfhE_fstiv-v4NbDVof5rQ2hHDMK2",
+            type: "text",
+            answers: ["camera"],
+            dialogues: [
+                { speaker: "K", text: "咦？你們不知道嗎？你們身上那套制服的第一顆鈕扣其實是微型攝影機啊？" },
+                { speaker: "K", text: "雖然有很多搞不懂究竟要幹嘛的功能，但用第一人稱視角來觀看你們整域真的挺有帶入感的，很好配爆米...咳，對掌握現場情況蠻有幫助的" },
+                { speaker: "R", text: "你這傢伙，我們在工作的時候你在把我們的工作當電影看嗎！" }
+            ]
+        },
+        q3: {
+            title: "碎片3. 關於K的名字由來",
+            preStory: "K的代號是用一個字母來做代表，非常的簡明幹練，但為什麼會使用這個代號呢？應該不是因為前面還有另外10個人吧，其中有什麼特別的涵義，或是特別的由來嗎？",
+            qText: "答案是一個中文字",
+            qSub: "",
+            img: "https://lh3.googleusercontent.com/d/1nMOatA8nkRBk9Z9YQWsg1MtaJznsHpIL",
+            type: "text",
+            answers: ["王"],
+            dialogues: [
+                { speaker: "K", text: "意義嗎，那當然是King的K啊（笑）" },
+                { speaker: "K", text: "不要開玩笑嗎，啊，那就只能回答無可奉告了呢" },
+                { speaker: "K", text: "但我倒是可以回答R的，絕對是Rhinopharyngitis。" },
+                { speaker: "R", text: "你才有鼻咽炎啦！！憑什麼你是King，我是Rhinopharyngitis啊，開什麼玩笑。" },
+                { speaker: "K", text: "是我誤會了，看來是Rage的R才對呢，不好意思啊。" }
+            ]
+        },
+        q4: {
+            title: "碎片4. 菜鳥整域師K?",
+            preStory: "K對整域感覺非常的熟練，對於解謎的思路也總是領先大家很多，但聽說K在新人時期並不是這樣的，好像也有許多在菜鳥時期因為慌亂而搞砸的事情？",
+            qText: "問號應該填入哪一組圖片？",
+            qSub: "請點選下方按鈕作答",
+            img: "",
+            type: "options",
+            answers: ["C"],
+            dialogues: [
+                { speaker: "K", text: "是也有這樣的時期呢，搞砸的事情啊...好像是有一次比較嚴重，那好像是我的第二次委託的事吧" },
+                { speaker: "K", text: "委託人有一間房間的牆上擺滿了密密麻麻的恐怖小丑面具，面具上的圖案還會變來變去的，因為太詭異了所以不小心弄壞了幾個面具，好不容易完成委託後我都覺得我要患上小丑面具恐懼症了..." },
+                { speaker: "K", text: "希望委託人的內心沒有因此有所缺損呢...不，在第三間房間我沒說話是因為收訊不良，訊息傳不出去，並不是因為我不敢看那個畫面，你們別誤會了" }
+            ]
+        },
+        q5: {
+            title: "碎片5. R和K",
+            preStory: "整域師事務所對於整域的方法有兩大流派，R跟K剛好就是兩派的代表人物，表面上看起來好像理念不太合但私底下相處起來的感覺好像卻很熟稔，不知道兩位實際上對彼此的印象究竟是怎麼樣的？",
+            qText: "請輸入一個英文單字 (10個字母)",
+            qSub: "",
+            img: "https://lh3.googleusercontent.com/d/1VdVg8051Hna1c-CpTsrX_WPD-RCBSLJn",
+            type: "text",
+            answers: ["inpression", "impression"], // 寬容判定拼字
+            dialogues: [
+                { speaker: "R", text: "K就只是一個想裝正經但實際上亂七八糟的人" },
+                { speaker: "K", text: "這樣說上司也太過分了吧，那我要說R是表面上看起來輕浮，但實際上不敢觸犯守則的膽小鬼，把新人一個人丟著就消失了也太過分了" },
+                { speaker: "R", text: "如果大家都不遵守守則的話，那守則不就失去意義了嗎" },
+                { speaker: "R", text: "話說你如果想擺上司的架子，好歹把座位收乾淨，身為整域師，你的桌子亂成這樣，附近地上還一大堆紙團是怎樣" }
+            ]
+        },
+        q6: {
+            title: "碎片6. 你與K的初見",
+            preStory: "這次的委託是由第一次執行任務的菜鳥整理師來負責整域的，聽說他是自己找上門的應聘的神奇人物，而立刻同意他入職然後就直接派他出任務的人就是K，當時究竟是怎麼想的呢？",
+            qText: "請照順序輸入底線要填入的9個字母 (不含標點符號與空格)",
+            qSub: "",
+            img: "https://lh3.googleusercontent.com/d/1ZsE6kohu3lpeO8uN7KQbhqB7Bfi4aqwi",
+            type: "text",
+            answers: ["itsnothin"],
+            dialogues: [
+                { speaker: "K", text: "啊，是的，我還是第一次看到有人真的看了傳單就跑來應聘呢，那個傳單連我都覺得很像什麼詐騙廣告" },
+                { speaker: "K", text: "但，他看起來確實很需要整域師，他來應徵的時候實在太沉默了，是個防備心非常重的孩子，不管是關心或是質問，他總是只會回答兩個字：沒事。" },
+                { speaker: "K", text: "我想，他的問題一定只有他自己能解決吧" },
+                { speaker: "K", text: "不過他在忘了一切整域時竟然能展現那樣的面貌，原來實際上是那樣的孩子呢，希望他之後也會持續傾聽自己的聲音。" },
+                { speaker: "K", text: "現在整域師依然在招募中喔，歡迎各位來應徵～^^" }
+            ]
+        }
+    };
+
+    let solvedState = JSON.parse(localStorage.getItem('k_exhibit_progress')) || {
+        q1: false, q2: false, q3: false, q4: false, q5: false, q6: false
+    };
+
+    let currentQuestKey = 'q1';
+
+    function initApp() {
+        let total = 0;
+        for (let key in solvedState) {
+            const badge = document.getElementById(`badge-${key}`);
+            const piece = document.getElementById(`pz-${key}`);
+            if (solvedState[key]) {
+                badge.innerText = "✨ 已解鎖";
+                badge.className = "quest-status status-unlocked";
+                piece.classList.add('unlocked');
+                total++;
             } else {
-                rewardZone.classList.add('hidden');
+                badge.innerText = "🔒 未解鎖";
+                badge.className = "quest-status status-locked";
+                piece.classList.remove('unlocked');
             }
         }
+        // 集滿 6 片顯示大圖按鈕
+        const fullBtn = document.getElementById('full-puzzle-btn-box');
+        if (total === 6) {
+            fullBtn.classList.remove('hidden');
+        } else {
+            fullBtn.classList.add('hidden');
+        }
+    }
 
-        function openQuest(questId) {
-            currentActiveQuest = questId;
-            const data = questData[questId];
-            
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('quest-view').classList.remove('hidden');
-            
-            document.getElementById('current-quest-title').innerText = data.title;
-            // 換上該關卡對應的照片網址
-            document.getElementById('current-quest-img').src = data.imgUrl;
-            
-            document.getElementById('password-input').value = '';
-            const feedback = document.getElementById('feedback-msg');
-            feedback.className = "msg hidden";
+    function switchView(viewId) {
+        ['view-home', 'view-intro', 'view-solving', 'view-story'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
+        document.getElementById(viewId).classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
 
-            const inputArea = document.getElementById('input-area');
-            if (playerProgress[questId]) {
-                inputArea.classList.add('hidden');
-                feedback.innerText = data.story;
-                feedback.className = "msg msg-success";
+    function openQuestIntro(key) {
+        currentQuestKey = key;
+        const q = questDb[key];
+        
+        // 如果已經解過，直接看完整故事
+        if (solvedState[key]) {
+            renderStoryPage(key);
+            switchView('view-story');
+            return;
+        }
+
+        document.getElementById('intro-title').innerText = q.title;
+        document.getElementById('intro-pre-story').innerText = q.preStory;
+        switchView('view-intro');
+    }
+
+    function goToSolving() {
+        const q = questDb[currentQuestKey];
+        document.getElementById('solving-title').innerText = q.title;
+        document.getElementById('solving-pre-story').innerText = q.preStory;
+        document.getElementById('solving-q-text').innerText = q.qText;
+        document.getElementById('solving-q-subtext').innerText = q.qSub;
+
+        // 圖片處理
+        const imgEl = document.getElementById('solving-q-img');
+        if (q.img) {
+            imgEl.src = q.img;
+            imgEl.classList.remove('hidden');
+        } else {
+            imgEl.classList.add('hidden');
+        }
+
+        // Q1 提示按鈕開關
+        if (currentQuestKey === 'q1') {
+            document.getElementById('q1-hints-box').classList.remove('hidden');
+        } else {
+            document.getElementById('q1-hints-box').classList.add('hidden');
+        }
+
+        // 題型切換
+        document.getElementById('error-msg').classList.add('hidden');
+        if (q.type === 'options') {
+            document.getElementById('action-text-input').classList.add('hidden');
+            document.getElementById('action-options').classList.remove('hidden');
+        } else {
+            document.getElementById('action-text-input').classList.remove('hidden');
+            document.getElementById('action-options').classList.add('hidden');
+            document.getElementById('ans-input').value = '';
+        }
+
+        switchView('view-solving');
+    }
+
+    function submitAnswer() {
+        const userAns = document.getElementById('ans-input').value.trim().toLowerCase();
+        verify(userAns);
+    }
+
+    function submitChoice(choice) {
+        verify(choice);
+    }
+
+    function verify(inputVal) {
+        const q = questDb[currentQuestKey];
+        const isCorrect = q.answers.some(ans => ans.toLowerCase() === inputVal);
+
+        if (isCorrect) {
+            solvedState[currentQuestKey] = true;
+            localStorage.setItem('k_exhibit_progress', JSON.stringify(solvedState));
+            initApp();
+            document.getElementById('error-msg').classList.add('hidden');
+            document.getElementById('success-modal').classList.remove('hidden');
+        } else {
+            document.getElementById('error-msg').classList.remove('hidden');
+        }
+    }
+
+    function openStoryAfterModal() {
+        document.getElementById('success-modal').classList.add('hidden');
+        renderStoryPage(currentQuestKey);
+        switchView('view-story');
+    }
+
+    function renderStoryPage(key) {
+        const q = questDb[key];
+        document.getElementById('story-title').innerText = q.title;
+        document.getElementById('story-pre-part').innerText = q.preStory;
+        
+        const postBox = document.getElementById('story-post-part');
+        postBox.innerHTML = '';
+
+        q.dialogues.forEach(item => {
+            const div = document.createElement('div');
+            if (item.speaker === 'K') {
+                div.className = 'dialogue-k';
+                div.innerText = `K: ${item.text}`;
+            } else if (item.speaker === 'R') {
+                div.className = 'dialogue-r';
+                div.innerText = `R: ${item.text}`;
             } else {
-                inputArea.classList.remove('hidden');
+                div.innerText = item.text;
             }
+            postBox.appendChild(div);
+        });
+    }
+
+    function goToHome() {
+        switchView('view-home');
+        initApp();
+    }
+
+    function toggleHint(id) {
+        const el = document.getElementById(`${id}-content`);
+        el.classList.toggle('hidden');
+    }
+
+    function resetProgress() {
+        if(confirm("確定要重設所有關卡進度嗎？(測試用)")) {
+            solvedState = { q1: false, q2: false, q3: false, q4: false, q5: false, q6: false };
+            localStorage.setItem('k_exhibit_progress', JSON.stringify(solvedState));
+            initApp();
+            alert("進度已重設！");
         }
+    }
 
-        function verifyPassword() {
-            const inputVal = document.getElementById('password-input').value.trim();
-            const currentQuest = questData[currentActiveQuest];
-            const feedback = document.getElementById('feedback-msg');
-            const inputArea = document.getElementById('input-area');
-
-            feedback.classList.remove('hidden');
-
-            if (inputVal === currentQuest.answer) {
-                playerProgress[currentActiveQuest] = true;
-                localStorage.setItem('exhibit_game_progress_v2', JSON.stringify(playerProgress));
-                inputArea.classList.add('hidden');
-                feedback.innerText = currentQuest.story;
-                feedback.className = "msg msg-success";
-            } else {
-                feedback.innerText = "❌ 密碼錯誤，現場的線索似乎還漏了什麼？";
-                feedback.className = "msg msg-error";
-            }
-        }
-
-        function goBack() {
-            document.getElementById('quest-view').classList.add('hidden');
-            document.getElementById('main-menu').classList.remove('hidden');
-            initGame();
-        }
-
-        function resetGame() {
-            if(confirm("確定要清除所有通關進度嗎？")) {
-                playerProgress = { q1: false, q2: false, q3: false, q4: false, q5: false, q6: false };
-                localStorage.setItem('exhibit_game_progress_v2', JSON.stringify(playerProgress));
-                initGame();
-                alert("進度已重設！");
-            }
-        }
-
-        initGame();
-    </script>
+    initApp();
+</script>
 </body>
 </html>
