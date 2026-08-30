@@ -95,12 +95,12 @@
         }
 
         /* 根據不同碎片，自動定位顯示圖片的相對應角落 */
-        #pz-q1.unlocked { background-position: left top; }
-        #pz-q2.unlocked { background-position: center top; }
-        #pz-q3.unlocked { background-position: right top; }
-        #pz-q4.unlocked { background-position: left bottom; }
-        #pz-q5.unlocked { background-position: center bottom; }
-        #pz-q6.unlocked { background-position: right bottom; }
+        #pz-1.unlocked { background-position: left top; }
+        #pz-2.unlocked { background-position: center top; }
+        #pz-3.unlocked { background-position: right top; }
+        #pz-4.unlocked { background-position: left bottom; }
+        #pz-5.unlocked { background-position: center bottom; }
+        #pz-6.unlocked { background-position: right bottom; }
 
         /* 任務卡片 */
         .quest-card {
@@ -299,12 +299,12 @@
         <div class="puzzle-section">
             <div class="puzzle-title">🧩 K的記憶拼圖進度</div>
             <div class="puzzle-grid">
-                <div id="pz-q1" class="puzzle-piece">碎片 1</div>
-                <div id="pz-q2" class="puzzle-piece">碎片 2</div>
-                <div id="pz-q3" class="puzzle-piece">碎片 3</div>
-                <div id="pz-q4" class="puzzle-piece">碎片 4</div>
-                <div id="pz-q5" class="puzzle-piece">碎片 5</div>
-                <div id="pz-q6" class="puzzle-piece">碎片 6</div>
+                <div id="pz-1" class="puzzle-piece">碎片 1</div>
+                <div id="pz-2" class="puzzle-piece">碎片 2</div>
+                <div id="pz-3" class="puzzle-piece">碎片 3</div>
+                <div id="pz-4" class="puzzle-piece">碎片 4</div>
+                <div id="pz-5" class="puzzle-piece">碎片 5</div>
+                <div id="pz-6" class="puzzle-piece">碎片 6</div>
             </div>
             <div id="full-puzzle-btn-box" class="hidden" style="margin-top: 12px;">
                 <a href="full.jpg" target="_blank" style="color: #34d399; font-size: 13px; font-weight: bold; text-decoration: underline;">
@@ -526,13 +526,30 @@
         q1: false, q2: false, q3: false, q4: false, q5: false, q6: false
     };
 
+    // 隨機分配題目與拼圖位置的對應表
+    let pieceMapping = JSON.parse(localStorage.getItem('k_puzzle_map'));
+    if (!pieceMapping) {
+        // 如果沒有紀錄，就隨機洗牌產生 1~6 的順序
+        let arr = [1, 2, 3, 4, 5, 6];
+        arr.sort(() => Math.random() - 0.5); 
+        pieceMapping = {
+            q1: arr[0], q2: arr[1], q3: arr[2], 
+            q4: arr[3], q5: arr[4], q6: arr[5]
+        };
+        localStorage.setItem('k_puzzle_map', JSON.stringify(pieceMapping));
+    }
+
     let currentQuestKey = 'q1';
 
     function initApp() {
         let total = 0;
         for (let key in solvedState) {
             const badge = document.getElementById(`badge-${key}`);
-            const piece = document.getElementById(`pz-${key}`);
+            
+            // 透過隨機對應表，找出這題要解鎖哪一塊拼圖
+            const targetPieceId = pieceMapping[key];
+            const piece = document.getElementById(`pz-${targetPieceId}`);
+            
             if (solvedState[key]) {
                 badge.innerText = "✨ 已解鎖";
                 badge.className = "quest-status status-unlocked";
@@ -544,7 +561,7 @@
                 piece.classList.remove('unlocked');
             }
         }
-        // 集滿 6 片顯示大圖按鈕
+        
         const fullBtn = document.getElementById('full-puzzle-btn-box');
         if (total === 6) {
             fullBtn.classList.remove('hidden');
@@ -681,8 +698,11 @@
         if(confirm("確定要重設所有關卡進度嗎？(測試用)")) {
             solvedState = { q1: false, q2: false, q3: false, q4: false, q5: false, q6: false };
             localStorage.setItem('k_exhibit_progress', JSON.stringify(solvedState));
-            initApp();
-            alert("進度已重設！");
+            // 刪除舊的隨機對應表，下次整理網頁會產生新位置
+            localStorage.removeItem('k_puzzle_map'); 
+            
+            // 強制重新載入網頁來套用新的隨機狀態
+            location.reload(); 
         }
     }
 
