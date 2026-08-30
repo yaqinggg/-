@@ -101,7 +101,6 @@
         #pz-q4.unlocked { background-position: left bottom; }
         #pz-q5.unlocked { background-position: center bottom; }
         #pz-q6.unlocked { background-position: right bottom; }
-        }
 
         /* 任務卡片 */
         .quest-card {
@@ -621,7 +620,7 @@
     }
 
     function submitChoice(choice) {
-        verify(choice);
+        verify(choice.toLowerCase());
     }
 
     function verify(inputVal) {
