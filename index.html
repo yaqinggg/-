@@ -86,12 +86,12 @@
         }
         /* 共用的已解鎖樣式（改成顯示對應位置的圖片） */
         .puzzle-piece.unlocked {
-            background-image: url('full.jpg'); /* 這裡填入你的完整大圖檔名 */
-            background-size: 316% 205%;        /* 精準計算，完美吻合 3x2 網格與縫隙比例 */
+            background-image: url('full.jpg'); 
+            background-size: 316% 205%;        
             background-repeat: no-repeat;
-            color: transparent;                /* 將原本的「碎片 1」文字變透明隱藏 */
+            color: transparent;                
             box-shadow: none;
-            border: 1px solid #f59e0b;         /* 增加一點金邊質感 */
+            border: 1px solid #f59e0b;         
         }
 
         /* 根據不同碎片，自動定位顯示圖片的相對應角落 */
@@ -160,7 +160,7 @@
         /* 劇情與提示區塊 */
         .pre-story-box {
             background: #18181b;
-            color: #a1a1aa; /* 灰色前半段劇情 */
+            color: #a1a1aa; 
             font-size: 14px;
             line-height: 1.6;
             padding: 14px;
@@ -176,8 +176,8 @@
             font-size: 14px;
             margin-bottom: 16px;
         }
-        .dialogue-k { color: #60a5fa; font-weight: 500; margin-top: 8px; } /* K的對話：亮藍 */
-        .dialogue-r { color: #f87171; font-weight: 500; margin-top: 8px; } /* R的對話：淡紅 */
+        .dialogue-k { color: #60a5fa; font-weight: 500; margin-top: 8px; } 
+        .dialogue-r { color: #f87171; font-weight: 500; margin-top: 8px; } 
         
         .question-box {
             background: #27272a;
@@ -339,11 +339,8 @@
                 <span class="quest-title">關卡 6. 你與K的初見</span>
                 <span id="badge-q6" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
-        </div> 
-    </div> 
-
-    <!-- ================= 2. 任務前情介紹頁 ================= -->
-    <div id="view-intro" class="hidden">
+        </div>
+    </div> <!-- 首頁在此正確關閉 -->
 
     <!-- ================= 2. 任務前情介紹頁 ================= -->
     <div id="view-intro" class="hidden">
@@ -503,7 +500,7 @@
             qSub: "",
             img: "q5.jpg",
             type: "text",
-            answers: ["inpression", "impression"], // 寬容判定拼字
+            answers: ["inpression", "impression"], 
             dialogues: [
                 { speaker: "R", text: "K就只是一個想裝正經但實際上亂七八糟的人" },
                 { speaker: "K", text: "這樣說上司也太過分了吧，那我要說R是表面上看起來輕浮，但實際上不敢觸犯守則的膽小鬼，把新人一個人丟著就消失了也太過分了" },
