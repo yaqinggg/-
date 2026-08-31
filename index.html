@@ -299,12 +299,12 @@
         <div class="puzzle-section">
             <div class="puzzle-title">🧩 K的記憶拼圖進度</div>
             <div class="puzzle-grid">
-                <div id="pz-1" class="puzzle-piece">碎片 1</div>
-                <div id="pz-2" class="puzzle-piece">碎片 2</div>
-                <div id="pz-3" class="puzzle-piece">碎片 3</div>
-                <div id="pz-4" class="puzzle-piece">碎片 4</div>
-                <div id="pz-5" class="puzzle-piece">碎片 5</div>
-                <div id="pz-6" class="puzzle-piece">碎片 6</div>
+                <div id="pz-1" class="puzzle-piece">碎片</div>
+                <div id="pz-2" class="puzzle-piece">碎片</div>
+                <div id="pz-3" class="puzzle-piece">碎片</div>
+                <div id="pz-4" class="puzzle-piece">碎片</div>
+                <div id="pz-5" class="puzzle-piece">碎片</div>
+                <div id="pz-6" class="puzzle-piece">碎片</div>
             </div>
             <div id="full-puzzle-btn-box" class="hidden" style="margin-top: 12px;">
                 <a href="full.jpg" target="_blank" style="color: #34d399; font-size: 13px; font-weight: bold; text-decoration: underline;">
@@ -316,31 +316,30 @@
         <!-- 任務列表 -->
         <div class="quest-list">
             <div class="quest-card" onclick="openQuestIntro('q1')">
-                <span class="quest-title">碎片1. 嚴肅打委託信的K</span>
+                <span class="quest-title">關卡 1. 嚴肅打委託信的K</span>
                 <span id="badge-q1" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
             <div class="quest-card" onclick="openQuestIntro('q2')">
-                <span class="quest-title">碎片2. 為什麼K每次都能精準地回覆</span>
+                <span class="quest-title">關卡 2. K是抓時間大師？</span>
                 <span id="badge-q2" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
             <div class="quest-card" onclick="openQuestIntro('q3')">
-                <span class="quest-title">碎片3. 關於K的名字由來</span>
+                <span class="quest-title">關卡 3. 關於K的名字由來</span>
                 <span id="badge-q3" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
             <div class="quest-card" onclick="openQuestIntro('q4')">
-                <span class="quest-title">碎片4. 菜鳥整域師K?</span>
+                <span class="quest-title">關卡 4. 菜鳥整域師K?</span>
                 <span id="badge-q4" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
             <div class="quest-card" onclick="openQuestIntro('q5')">
-                <span class="quest-title">碎片5. R和K</span>
+                <span class="quest-title">關卡 5. R和K</span>
                 <span id="badge-q5" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
             <div class="quest-card" onclick="openQuestIntro('q6')">
-                <span class="quest-title">碎片6. 你與K的初見</span>
+                <span class="quest-title">關卡 6. 你與K的初見</span>
                 <span id="badge-q6" class="quest-status status-locked">🔒 未解鎖</span>
             </div>
         </div>
-    </div>
 
     <!-- ================= 2. 任務前情介紹頁 ================= -->
     <div id="view-intro" class="hidden">
@@ -363,13 +362,17 @@
             <img id="solving-q-img" class="quest-image hidden" src="" alt="題目圖片">
             <div id="solving-q-subtext" style="font-size: 13px; color: #94a3b8;"></div>
 
-            <!-- 碎片1 專用提示折疊 -->
+            <!-- 關卡1 專用階層式提示 -->
             <div id="q1-hints-box" class="hidden" style="margin-top: 10px;">
-                <button class="toggle-btn" onclick="toggleHint('hint1')">💡 我需要提示</button>
+                <button class="toggle-btn" onclick="toggleHint('hint1')">💡 第一個提示（我需要提示）</button>
+                
                 <div id="hint1-content" class="hidden" style="font-size: 13px; color: #f59e0b; margin: 4px 0 10px 0;">
-                    看起來像是有人用鍵盤打中文卻忘記切換成注音輸入法了
+                    <p style="margin-bottom: 12px;">看起來像是有人用鍵盤打中文卻忘記切換成注音輸入法了</p>
+                    
+                    <!-- 點開提示1後，才會出現提示2的按鈕 -->
+                    <button class="toggle-btn" onclick="toggleHint('hint2')">💡 第二個提示（我沒學過注音）</button>
                 </div>
-                <button class="toggle-btn" onclick="toggleHint('hint2')">💡 我沒學過注音</button>
+
                 <div id="hint2-content" class="hidden" style="margin-top: 6px;">
                     <div style="font-size: 13px; color: #f59e0b; margin-bottom: 4px;">附上注音與拼音的對照表，還是可以解開的喔！</div>
                     <img src="hint1.jpg" class="quest-image" alt="注音拼音對照表">
@@ -432,7 +435,7 @@
     // 關卡題目、答案、圖片與劇情資料庫
     const questDb = {
         q1: {
-            title: "碎片1. 嚴肅打委託信的K",
+            title: "關卡1. 嚴肅打委託信的K",
             preStory: "有傳聞說，K每次在打委託信的時候都會看起來非常的嚴肅，一副苦大仇深的表情，整個辦公室的氣氛都會異常肅殺，將茶遞給他的時候都必須非常小心的清拿輕放，不然下一秒他的眼刀感覺就要掃過來了。",
             qText: "cl3wl3u04vu/fu6u, cl3vu;3e03dj94vu8410。",
             qSub: "請輸入完整文字（包含標點符號）",
@@ -446,7 +449,7 @@
             ]
         },
         q2: {
-            title: "碎片2. 為什麼K每次都能精準地回覆",
+            title: "關卡2. K是抓時間大師？",
             preStory: "K每次總是能在緊要關頭傳訊息提醒重要的事，連整域師在被房間主人的鎖困住時也能夠精準的給出提示，彷彿一直跟著我們一樣，雖然是很令人安心的存在，有時候也很好奇K究竟為什麼這麼的全知全能？",
             qText: "請輸入一個英文單字 (6個字母)",
             qSub: "",
@@ -460,7 +463,7 @@
             ]
         },
         q3: {
-            title: "碎片3. 關於K的名字由來",
+            title: "關卡3. 關於K的名字由來",
             preStory: "K的代號是用一個字母來做代表，非常的簡明幹練，但為什麼會使用這個代號呢？應該不是因為前面還有另外10個人吧，其中有什麼特別的涵義，或是特別的由來嗎？",
             qText: "答案是一個中文字",
             qSub: "",
@@ -476,7 +479,7 @@
             ]
         },
         q4: {
-            title: "碎片4. 菜鳥整域師K?",
+            title: "關卡4. 菜鳥整域師K?",
             preStory: "K對整域感覺非常的熟練，對於解謎的思路也總是領先大家很多，但聽說K在新人時期並不是這樣的，好像也有許多在菜鳥時期因為慌亂而搞砸的事情？",
             qText: "問號應該填入哪一組圖片？",
             qSub: "請點選下方按鈕作答",
@@ -490,7 +493,7 @@
             ]
         },
         q5: {
-            title: "碎片5. R和K",
+            title: "關卡5. R和K",
             preStory: "整域師事務所對於整域的方法有兩大流派，R跟K剛好就是兩派的代表人物，表面上看起來好像理念不太合但私底下相處起來的感覺好像卻很熟稔，不知道兩位實際上對彼此的印象究竟是怎麼樣的？",
             qText: "請輸入一個英文單字 (10個字母)",
             qSub: "",
@@ -505,7 +508,7 @@
             ]
         },
         q6: {
-            title: "碎片6. 你與K的初見",
+            title: "關卡6. 你與K的初見",
             preStory: "這次的委託是由第一次執行任務的菜鳥整理師來負責整域的，聽說他是自己找上門的應聘的神奇人物，而立刻同意他入職然後就直接派他出任務的人就是K，當時究竟是怎麼想的呢？",
             qText: "請照順序輸入底線要填入的9個字母 (不含標點符號與空格)",
             qSub: "",
