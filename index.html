@@ -627,7 +627,7 @@
         const q = questDb[currentQuestKey];
         document.getElementById('solving-title').innerText = q.title;
         document.getElementById('solving-pre-story').innerText = q.preStory;
-        document.getElementById('solving-q-text').innerText = q.qText;
+        document.getElementById('solving-q-text').innerHTML = q.qText;
         document.getElementById('solving-q-subtext').innerText = q.qSub;
 
         // 圖片處理
