@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>支線謎題：解鎖K的秘密</title>
+    <title>挑戰支線謎題：解鎖K的秘密</title>
     <style>
         * {
             box-sizing: border-box;
@@ -43,6 +43,17 @@
             font-size: 13px;
             line-height: 1.5;
             margin-bottom: 20px;
+        }
+        .highlight-text {
+            color: #fbbf24;
+            font-size: 15px;
+            font-weight: bold;
+            background: rgba(245, 158, 11, 0.15);
+            padding: 6px 10px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-bottom: 8px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
         }
         .hidden { display: none !important; }
 
@@ -289,9 +300,9 @@
 <div class="container">
     <!-- ================= 1. 首頁 ================= -->
     <div id="view-home">
-        <h1>歡迎挑戰支線謎題，解鎖K的秘密！</h1>
+        <h1>挑戰支線謎題，解鎖K的秘密！</h1>
         <p class="subtitle">
-            集齊六個碎片即可到服務台兌換獎勵（沒解完也可以）<br>
+            <span class="highlight-text">✨ 集齊 4~6 個碎片即可至服務台兌換獎勵</span><br>
             題目或解題關鍵都藏在展場中，可以配合手機上的線索行動～
         </p>
 
@@ -567,7 +578,7 @@
         }
         
         const fullBtn = document.getElementById('full-puzzle-btn-box');
-        if (total === 6) {
+        if (total >= 4) {
             fullBtn.classList.remove('hidden');
         } else {
             fullBtn.classList.add('hidden');
