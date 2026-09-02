@@ -44,7 +44,7 @@
             line-height: 1.5;
             margin-bottom: 20px;
         }
-        .highlight-text {
+           .highlight-text {
             color: #fbbf24;
             font-size: 15px;
             font-weight: bold;
@@ -55,7 +55,19 @@
             margin-bottom: 8px;
             border: 1px solid rgba(245, 158, 11, 0.3);
         }
+        
+        /* 👈 新增下面這段警告文字樣式 */
+        .alert-text {
+            color: #f87171;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
         .hidden { display: none !important; }
+
 
         /* 主畫面：拼圖預覽 (2x3) */
         .puzzle-section {
@@ -300,11 +312,13 @@
 <div class="container">
     <!-- ================= 1. 首頁 ================= -->
     <div id="view-home">
-        <h1>挑戰支線謎題，解鎖K的秘密！</h1>
+              <h1>挑戰支線謎題，解鎖K的秘密！</h1>
         <p class="subtitle">
             <span class="highlight-text">✨ 集齊 4~6 個碎片即可至服務台兌換獎勵</span><br>
-            題目或解題關鍵都藏在展場中，可以配合手機上的線索行動～
+            <span class="alert-text">❗ 題目或解題關鍵都藏在展場中 ❗</span><br>
+            可以配合手機上的線索行動～
         </p>
+
 
         <!-- 拼圖區 -->
         <div class="puzzle-section">
